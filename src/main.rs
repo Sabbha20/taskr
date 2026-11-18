@@ -53,11 +53,12 @@ impl TaskList {
         }
     }
 
-    fn complete(&mut self, id: u32) {
+    fn complete(&mut self, id: u32) -> Result<(), String> {
         if let Some(task) = self.tasks.iter_mut().find(|t| t.id == id) {
             task.mark_done();
+            Ok(())
         } else {
-            println!("Task with id {} not found.", id);
+            Err(format!("Task {id} not found"))
         }
     }
 }
@@ -68,7 +69,9 @@ fn main() {
     tasks.add("Implement Rust");
     tasks.add("Test Rust");
 
-    tasks.complete(2);
+    tasks.complete(2).unwrap();
 
+    tasks.list();
+    tasks.complete(99).unwrap();
     tasks.list();
 }
