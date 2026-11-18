@@ -54,7 +54,7 @@ impl TaskList {
     }
 
     fn complete(&mut self, id: u32) {
-        if let Some(task) = self.tasks.iter_mut().find(|t| t.id == id ) {
+        if let Some(task) = self.tasks.iter_mut().find(|t| t.id == id) {
             task.mark_done();
         } else {
             println!("Task with id {} not found.", id);
@@ -63,26 +63,12 @@ impl TaskList {
 }
 
 fn main() {
-
-    // let mut tasks = vec![
-    //     Task::new(1, "Learn Rust"),
-    //     Task::new(2, "Implement Rust"),
-    //     Task::new(3, "Test Rust"),
-    // ];
-
     let mut tasks = TaskList::new();
     tasks.add("Learn Rust");
-    tasks.add("Implement Rust");    
+    tasks.add("Implement Rust");
     tasks.add("Test Rust");
 
-    // tasks[1].mark_done(); // Mark the second task as done
     tasks.complete(2);
-
-    // for task in &tasks {
-    //     println!("{}", task);
-    // }
-
-    // println!("Total tasks: {}", tasks.len());
 
     tasks.list();
 }
