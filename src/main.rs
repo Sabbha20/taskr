@@ -47,6 +47,13 @@ impl TaskList {
         self.next_id += 1;
     }
 
+    fn remove(&mut self, id: u32) -> Result<Task, String> {
+        match self.tasks.iter().position(|t| t.id == id) {
+            Some(index) => Ok(self.tasks.remove(index)),
+            None => Err(format!("Task {id} not found"))
+        }
+    }
+
     fn list(&self) {
         for task in &self.tasks {
             println!("{}", task);
@@ -74,8 +81,13 @@ fn main() {
 
     tasks.list();
     tasks.complete(99).unwrap_or_else(|e| println!("Error: {e}"));
-    match tasks.complete(100){
+    match tasks.complete(100) {
         Ok(_) => println!("Task 100 completed"),
+        Err(e) => println!("Error: {e}"),
+    }
+
+    match tasks.remove(1){
+        Ok(task) => println!("Removed: {task}"),
         Err(e) => println!("Error: {e}"),
     }
     tasks.list();
