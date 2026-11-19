@@ -87,7 +87,7 @@ fn main() {
     }
 
     match tasks.remove(1){
-        Ok(task) => println!("Removed: {task}"),
+        Ok(task) => println!("Removed: [Task {}: {}]", task.id, task.title),
         Err(e) => println!("Error: {e}"),
     }
     tasks.list();
