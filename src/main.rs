@@ -55,9 +55,13 @@ impl TaskList {
     }
 
     fn list(&self) {
+        println!("+----------------------------------------+");
+        println!("|             Task List:                 |");
+        println!("+----------------------------------------+");
         for task in &self.tasks {
             println!("{}", task);
         }
+        println!("==========================================");
     }
 
     fn complete(&mut self, id: u32) -> Result<(), String> {
