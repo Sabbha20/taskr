@@ -101,4 +101,19 @@ fn main() {
         Err(e) => println!("Error: {e}"),
     }
     tasks.list();
+
+    let mut user_input=String::new();
+    loop {
+        user_input.clear();
+        println!("Enter a task 'title' to add type 'exit' to quit:");
+        user_input = String::new();
+        std::io::stdin().read_line(&mut user_input).expect("Failed to read line");
+        if user_input.trim() == "exit" {
+            break;
+        }
+        tasks.add(user_input.trim());
+
+        tasks.list();
+    }
+
 }
