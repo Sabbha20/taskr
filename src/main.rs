@@ -42,16 +42,14 @@ impl TaskList {
     }
 
     fn add(&mut self, title: &str) -> Result<u32, String> {
-        
         if title.trim().is_empty() {
-            return Err("Task title cannot be empty".to_string())
-        } 
+            return Err("Task title cannot be empty".to_string());
+        }
         let id = self.next_id;
-        let task = Task::new(self.next_id, title);
+        let task = Task::new(id, title);
         self.tasks.push(task);
         self.next_id += 1;
         Ok(id)
-        
     }
 
     fn remove(&mut self, id: u32) -> Result<Task, String> {
@@ -84,24 +82,26 @@ impl TaskList {
 
 // helper function to parse a string into a u32 id in both complete and remove commands
 fn parse_id(arg: &str) -> Result<u32, String> {
-    arg.trim().parse::<u32>().map_err(|_| format!("Invalid id: {arg}"))
+    arg.trim()
+        .parse::<u32>()
+        .map_err(|_| format!("Invalid id: {arg}"))
 }
 
 fn handle_add(tasks: &mut TaskList, arg: &str) -> Result<String, String> {
     let id = tasks.add(arg.trim())?;
     Ok(format!("Task added with id: {id}"))
-}   
+}
 
 fn handle_complete(tasks: &mut TaskList, arg: &str) -> Result<String, String> {
     let id = parse_id(arg)?;
-    tasks.complete(id)?;    
+    tasks.complete(id)?;
     Ok(format!("Task {id} completed"))
 }
 
 fn handle_remove(tasks: &mut TaskList, arg: &str) -> Result<String, String> {
     let id = parse_id(arg)?;
-    tasks.remove(id)?;      
-    Ok(format!("Task {id} removed"))
+    let task = tasks.remove(id)?;
+    Ok(format!("Removed: {task}"))
 }
 
 fn main() {
@@ -113,38 +113,32 @@ fn main() {
     tasks.add("Buy some milk").expect(add_task_err);
 
     loop {
-        println!("\n--------------------------\n Enter a command\n--------------------------\n > `add` <title> adds a task.\n > `list` shows the tasks.\n > `complete` <id> marks a task as complete.\n > `remove` <id> removes a task.\n > `quit` exits.");
+        println!(
+            "\n--------------------------\n Enter a command\n--------------------------\n > `add` <title> adds a task.\n > `list` shows the tasks.\n > `complete` <id> marks a task as complete.\n > `remove` <id> removes a task.\n > `quit` exits."
+        );
         let mut user_input = String::new();
-        std::io::stdin().read_line(&mut user_input).expect("Failed to read line");
+        std::io::stdin()
+            .read_line(&mut user_input)
+            .expect("Failed to read line");
         let input = user_input.trim();
         let (cmd, arg) = input.split_once(' ').unwrap_or((input, ""));
-        match cmd {
-            "add" => {
-                match handle_add(&mut tasks, arg) {
-                    Ok(msg) => println!("{msg}"),
-                    Err(e) => println!("Error: {e}"),
-                }
-            },
-            "list" => tasks.list(),
-            "complete" => {
-                match handle_complete(&mut tasks, arg) {
-                    Ok(msg) => println!("{msg}"),
-                    Err(e) => println!("Error: {e}"),
-                }
-            },
-            "remove" => {
-                match handle_remove(&mut tasks, arg) {
-                    Ok(msg) => println!("{msg}"),
-                    Err(e) => println!("Error: {e}"),
-                }
-            },
-            "quit" | "exit" => {
-                println!("Exiting...");
-                break;
-            },
-            _ => println!("Unknown command: {}", input),
+        if cmd == "list" {
+            tasks.list();
+            continue;
         }
-
+        if cmd == "quit" || cmd == "exit" {
+            println!("Exiting...");
+            break;
+        }
+        let result = match cmd {
+            "add" => handle_add(&mut tasks, arg),
+            "complete" => handle_complete(&mut tasks, arg),
+            "remove" => handle_remove(&mut tasks, arg),
+            _ => Err(format!("Unknown command: {}", input)),
+        };
+        match result {
+            Ok(msg) => println!("{msg}"),
+            Err(e) => println!("Error: {e}"),
+        }
     }
-
 }
