@@ -1,4 +1,5 @@
 mod models;
+use dialoguer::{theme::ColorfulTheme, Input, Select};
 
 use crate::models::task_list::TaskList;
 
@@ -34,28 +35,33 @@ fn main() {
     tasks.add("Test Rust").expect(add_task_err);
     tasks.add("Buy some milk").expect(add_task_err);
 
+    let opt_items = vec!["Add", "List", "Complete", "Remove", "Quit"];
+
     loop {
-        println!(
-            "\n--------------------------\n Enter a command\n--------------------------\n > `add` <title> adds a task.\n > `list` or `ls` shows the tasks.\n > `complete` or `mark` <id> marks a task as complete.\n > `remove` <id> removes a task.\n > `quit` or `exit` or `q` exits."
-        );
+        let selection =Select::with_theme(&ColorfulTheme::default())
+        .with_prompt("Select an option")
+        .items(&opt_items)
+        .default(0)
+        .interact()
+        .unwrap();
+        
+        if selection == 1 {
+            tasks.list();
+            continue;
+        }
+        if selection == 4 {
+            println!("Exiting...");
+            break;
+        }
         let mut user_input = String::new();
         std::io::stdin()
             .read_line(&mut user_input)
             .expect("Failed to read line");
         let input = user_input.trim();
-        let (cmd, arg) = input.split_once(' ').unwrap_or((input, ""));
-        if cmd == "list" || cmd == "ls" {
-            tasks.list();
-            continue;
-        }
-        if cmd == "quit" || cmd == "exit" || cmd == "q" {
-            println!("Exiting...");
-            break;
-        }
-        let result = match cmd {
-            "add" => handle_add(&mut tasks, arg),
-            "complete" | "mark" => handle_complete(&mut tasks, arg),
-            "remove" => handle_remove(&mut tasks, arg),
+        let result = match selection {
+            0 => handle_add(&mut tasks, input),
+            2 => handle_complete(&mut tasks, input),
+            3 => handle_remove(&mut tasks, input),
             _ => Err(format!("Unknown command: {}", input)),
         };
         match result {
@@ -63,4 +69,6 @@ fn main() {
             Err(e) => println!("Error: {e}"),
         }
     }
+
+
 }
