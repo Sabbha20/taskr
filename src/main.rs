@@ -1,26 +1,9 @@
 mod models;
+mod menu;
 use dialoguer::{theme::ColorfulTheme, Input, Select};
 
 use crate::models::task_list::TaskList;
-
-#[derive(Clone, Copy, PartialEq, Eq)] 
-enum MenuAction { Add, List, Complete, Remove, Quit }
-impl MenuAction {
-    const ALL: [MenuAction; 5] = [
-        MenuAction::Add, MenuAction::List, MenuAction::Complete,
-        MenuAction::Remove, MenuAction::Quit,
-    ];
-
-    fn label(&self) -> &str {
-        match self {
-            MenuAction::Add => "Add",
-            MenuAction::List => "List",
-            MenuAction::Complete => "Complete",
-            MenuAction::Remove => "Remove",
-            MenuAction::Quit => "Quit",
-        }
-    }
-}
+use crate::menu::MenuAction;
 
 // helper function to parse a string into a u32 id in both complete and remove commands
 fn parse_id(arg: &str) -> Result<u32, String> {
