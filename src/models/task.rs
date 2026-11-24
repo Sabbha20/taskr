@@ -1,9 +1,39 @@
 use std::fmt;
 
+#[derive(Clone, Copy)]
+pub enum Priority {
+    Low,
+    Medium,
+    High,
+}
+
+impl Priority{
+    pub const ALL: [Priority; 3] = [
+        Priority::Low,
+        Priority::Medium,
+        Priority::High,
+    ];
+
+    pub fn label(&self) -> &str{
+        match self {
+            Priority::High => "High",
+            Priority::Low => "Low",
+            Priority::Medium => "Medium",
+        }
+    }
+}
+
+impl fmt::Display for Priority {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}", self.label())
+    }
+}
+
 pub struct Task {
     id: u32,
     title: String,
     done: bool,
+    priority: Priority,
 }
 
 impl Task {
@@ -11,11 +41,12 @@ impl Task {
         self.id
     }
 
-    pub fn new(id: u32, title: &str) -> Self {
+    pub fn new(id: u32, title: &str, priority:Priority) -> Self {
         Self {
             id,
             title: String::from(title),
             done: false,
+            priority,
         }
     }
 
@@ -27,6 +58,6 @@ impl Task {
 impl fmt::Display for Task {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         let mark = if self.done { "[x]" } else { "[ ]" };
-        write!(f, "{mark} Task {}: {}", self.id, self.title)
+        write!(f, "{mark} Task {}: {} ({})", self.id, self.title, self.priority.label())
     }
 }

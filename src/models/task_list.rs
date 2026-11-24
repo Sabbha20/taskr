@@ -1,4 +1,4 @@
-use crate::models::task::Task;
+use crate::models::task::{Priority, Task};
 
 pub struct TaskList {
     tasks: Vec<Task>,
@@ -13,12 +13,12 @@ impl TaskList {
         }
     }
 
-    pub fn add(&mut self, title: &str) -> Result<u32, String> {
+    pub fn add(&mut self, title: &str, priority: Priority) -> Result<u32, String> {
         if title.trim().is_empty() {
             return Err("Task title cannot be empty".to_string());
         }
         let id = self.next_id;
-        let task = Task::new(id, title);
+        let task = Task::new(id, title, priority);
         self.tasks.push(task);
         self.next_id += 1;
         Ok(id)
