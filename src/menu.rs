@@ -1,9 +1,18 @@
-#[derive(Clone, Copy, PartialEq, Eq)] 
-pub enum MenuAction { Add, List, Complete, Remove, Quit }
+#[derive(Clone, Copy)]
+pub enum MenuAction {
+    Add,
+    List,
+    Complete,
+    Remove,
+    Quit,
+}
 impl MenuAction {
     pub const ALL: [MenuAction; 5] = [
-        MenuAction::Add, MenuAction::List, MenuAction::Complete,
-        MenuAction::Remove, MenuAction::Quit,
+        MenuAction::Add,
+        MenuAction::List,
+        MenuAction::Complete,
+        MenuAction::Remove,
+        MenuAction::Quit,
     ];
 
     pub fn label(&self) -> &str {

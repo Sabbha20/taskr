@@ -1,9 +1,9 @@
-mod models;
 mod menu;
-use dialoguer::{theme::ColorfulTheme, Input, Select};
+mod models;
+use dialoguer::{Input, Select, theme::ColorfulTheme};
 
-use crate::models::task_list::TaskList;
 use crate::menu::MenuAction;
+use crate::models::task_list::TaskList;
 
 // helper function to parse a string into a u32 id in both complete and remove commands
 fn parse_id(arg: &str) -> Result<u32, String> {
@@ -47,35 +47,39 @@ fn main() {
     let opt_items: Vec<&str> = MenuAction::ALL.iter().map(|a| a.label()).collect();
 
     loop {
-        let selection =Select::with_theme(&ColorfulTheme::default())
-        .with_prompt("Select an option")
-        .items(&opt_items)
-        .default(0)
-        .interact()
-        .unwrap();
+        let selection = Select::with_theme(&ColorfulTheme::default())
+            .with_prompt("Select an option")
+            .items(&opt_items)
+            .default(0)
+            .interact()
+            .unwrap();
         let action = MenuAction::ALL[selection];
-        
+
         let result = match action {
             MenuAction::Add => {
-                let title: String = prompt("Task title");
+                let title = prompt("Task title");
                 handle_add(&mut tasks, &title)
-            },
+            }
             MenuAction::Complete => {
-                let id: String = prompt("Task id");
+                let id = prompt("Task id");
                 handle_complete(&mut tasks, &id)
-            },
+            }
             MenuAction::Remove => {
-                let id: String = prompt("Task id");
+                let id = prompt("Task id");
                 handle_remove(&mut tasks, &id)
-            },
-            MenuAction::List => { tasks.list(); continue; }
-            MenuAction::Quit => { println!("Exiting..."); break; }
+            }
+            MenuAction::List => {
+                tasks.list();
+                continue;
+            }
+            MenuAction::Quit => {
+                println!("Exiting...");
+                break;
+            }
         };
         match result {
             Ok(msg) => println!("{msg}"),
             Err(e) => println!("Error: {e}"),
         }
     }
-
-
 }
