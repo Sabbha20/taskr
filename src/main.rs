@@ -93,6 +93,18 @@ fn main() {
                 println!("Exiting...");
                 break;
             }
+            MenuAction::ListByPriority => {
+                tasks.list_by_priority();
+                continue;
+            }
+            MenuAction::ReverseList => {
+                tasks.reverse_list();
+                continue;
+            }
+            MenuAction::ListPending => {
+                tasks.list_pending();
+                continue;
+            }
         };
         match result {
             Ok(msg) => println!("{msg}"),

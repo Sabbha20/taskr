@@ -37,6 +37,15 @@ impl Task {
         self.id
     }
 
+    // Additional methods for Task can be added here, such as getters for done status, and priority.
+    pub fn done(&self) -> bool {
+        self.done
+    }
+
+    pub fn priority(&self) -> Priority {
+        self.priority
+    }
+
     pub fn new(id: u32, title: &str, priority: Priority) -> Self {
         Self {
             id,
