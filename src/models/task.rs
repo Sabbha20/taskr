@@ -38,7 +38,7 @@ impl Task {
     }
 
     // Additional methods for Task can be added here, such as getters for done status, and priority.
-    pub fn done(&self) -> bool {
+    pub fn is_done(&self) -> bool {
         self.done
     }
 

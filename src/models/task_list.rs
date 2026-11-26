@@ -6,6 +6,16 @@ pub struct TaskList {
     next_id: u32,
 }
 
+fn print_tasks(title: &str, tasks: &[&Task]) {
+    println!("+----------------------------------------+");
+    println!("|             {}             |", title);
+    println!("+----------------------------------------+");
+    for task in tasks {
+        println!("{}", task);
+    }
+    println!("==========================================");
+}
+
 impl TaskList {
     pub fn new() -> Self {
         Self {
@@ -33,48 +43,25 @@ impl TaskList {
     }
 
     pub fn list(&self) {
-        println!("+----------------------------------------+");
-        println!("|             Task List:                 |");
-        println!("+----------------------------------------+");
-        for task in &self.tasks {
-            println!("{}", task);
-        }
-        println!("==========================================");
+        let all_items: Vec<&Task> = self.tasks.iter().collect();
+        print_tasks("Task List", &all_items);
     }
 
     pub fn list_by_priority(&self) {
         let mut sorted: Vec<&Task> = self.tasks.iter().collect();
         sorted.sort_by_key(|t| t.priority());
-        println!("+----------------------------------------+");
-        println!("|         Task List by Low Priority:         |");
-        println!("+----------------------------------------+");
-        for task in sorted {
-            println!("{}", task);
-        }
-        println!("==========================================");
+        print_tasks("Task List by Low Priority", &sorted);
     }
 
     pub fn reverse_list(&self) {
         let mut reversed: Vec<&Task> = self.tasks.iter().collect();
         reversed.sort_by_key(|t| Reverse(t.priority()));
-
-        println!("+----------------------------------------+");
-        println!("|         Task List in High Priority:          |");
-        println!("+----------------------------------------+");
-        for task in reversed {
-            println!("{}", task);
-        }
-        println!("==========================================");
+        print_tasks("Task List in High Priority", &reversed);
     }
 
     pub fn list_pending(&self) {
-        println!("+----------------------------------------+");
-        println!("|         Pending Task List:             |");
-        println!("+----------------------------------------+");
-        for task in self.tasks.iter().filter(|t| !t.done()) {
-            println!("{}", task);
-        }
-        println!("==========================================");
+        let pending_items: Vec<&Task> = self.tasks.iter().filter(|t| !t.is_done()).collect();
+        print_tasks("Pending Tasks", &pending_items);
     }
     
 
