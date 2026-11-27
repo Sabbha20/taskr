@@ -7,13 +7,13 @@ pub struct TaskList {
 }
 
 fn print_tasks(title: &str, tasks: &[&Task]) {
-    println!("+{}+", "-".repeat(40));
-    println!("|{:^40}|", title);  
-    println!("+{}+", "-".repeat(40));
+    println!("+{}+", "-".repeat(90));
+    println!("|{:^90}|", title);  
+    println!("+{}+", "-".repeat(90));
     for task in tasks {
-        println!("{}", task);
+        println!("| {:<89}|", task.to_string());
     }
-    println!("{}", "=".repeat(42));
+    println!("+{}+", "-".repeat(90));
 }
 
 impl TaskList {
