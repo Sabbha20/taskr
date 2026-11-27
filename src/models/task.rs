@@ -1,6 +1,7 @@
+use serde::{Deserialize, Serialize};
 use std::fmt;
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
 pub enum Priority {
     Low,
     Medium,
@@ -25,6 +26,7 @@ impl fmt::Display for Priority {
     }
 }
 
+#[derive(Serialize, Deserialize)]
 pub struct Task {
     id: u32,
     title: String,

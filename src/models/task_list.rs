@@ -1,6 +1,9 @@
 use crate::models::task::{Priority, Task};
 use std::cmp::Reverse;
 
+use serde::{Deserialize, Serialize};
+
+#[derive(Serialize, Deserialize)]
 pub struct TaskList {
     tasks: Vec<Task>,
     next_id: u32,
@@ -8,7 +11,7 @@ pub struct TaskList {
 
 fn print_tasks(title: &str, tasks: &[&Task]) {
     println!("+{}+", "-".repeat(90));
-    println!("|{:^90}|", title);  
+    println!("|{:^90}|", title);
     println!("+{}+", "-".repeat(90));
     for task in tasks {
         println!("| {:<89}|", task.to_string());
@@ -63,7 +66,6 @@ impl TaskList {
         let pending_items: Vec<&Task> = self.tasks.iter().filter(|t| !t.is_done()).collect();
         print_tasks("Pending Tasks", &pending_items);
     }
-    
 
     pub fn complete(&mut self, id: u32) -> Result<(), String> {
         match self.tasks.iter_mut().find(|t| t.id() == id) {
@@ -73,6 +75,13 @@ impl TaskList {
             }
             None => Err(format!("Task {id} not found")),
         }
+    }
+
+    pub fn save(&self, path: &str) -> Result<(), String> {
+        let json = serde_json::to_string_pretty(&self.tasks)
+            .map_err(|e| format!("Failed to serialize tasks: {}", e))?;
+        std::fs::write(path, json).map_err(|e| format!("Failed to write to file: {}", e))?;
+        Ok(())
     }
 }
 

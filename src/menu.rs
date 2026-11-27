@@ -8,7 +8,6 @@ pub enum MenuAction {
     Complete,
     Remove,
     Quit,
-    
 }
 impl MenuAction {
     pub const ALL: [MenuAction; 8] = [

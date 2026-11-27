@@ -91,6 +91,7 @@ fn main() {
             }
             MenuAction::Quit => {
                 println!("Exiting...");
+                tasks.save("tasks.json").unwrap();
                 break;
             }
             MenuAction::ListByPriority => {
