@@ -78,7 +78,7 @@ impl TaskList {
     }
 
     pub fn save(&self, path: &str) -> Result<(), String> {
-        let json = serde_json::to_string_pretty(&self.tasks)
+        let json = serde_json::to_string_pretty(&self)
             .map_err(|e| format!("Failed to serialize tasks: {}", e))?;
         std::fs::write(path, json).map_err(|e| format!("Failed to write to file: {}", e))?;
         Ok(())
