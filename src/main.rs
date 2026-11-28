@@ -49,16 +49,18 @@ fn select_priority() -> Priority {
 }
 
 fn main() {
-    let mut tasks = TaskList::new();
-    let add_task_err = "Failed to add task";
-    tasks.add("Learn Rust", Priority::High).expect(add_task_err);
-    tasks
-        .add("Implement Rust", Priority::High)
-        .expect(add_task_err);
-    tasks.add("Test Rust", Priority::Low).expect(add_task_err);
-    tasks
-        .add("Buy some milk", Priority::Medium)
-        .expect(add_task_err);
+    // let mut tasks = TaskList::new();
+    // let add_task_err = "Failed to add task";
+    // tasks.add("Learn Rust", Priority::High).expect(add_task_err);
+    // tasks
+    //     .add("Implement Rust", Priority::High)
+    //     .expect(add_task_err);
+    // tasks.add("Test Rust", Priority::Low).expect(add_task_err);
+    // tasks
+    //     .add("Buy some milk", Priority::Medium)
+    //     .expect(add_task_err);
+
+    let mut tasks = TaskList::load("tasks.json").unwrap();
 
     let opt_items: Vec<&str> = MenuAction::ALL.iter().map(|a| a.label()).collect();
 
@@ -91,7 +93,9 @@ fn main() {
             }
             MenuAction::Quit => {
                 println!("Exiting...");
-                tasks.save("tasks.json").unwrap();
+                if let Err(e) = tasks.save("tasks.json") {
+                    println!("Error: {e}");
+                }
                 break;
             }
             MenuAction::ListByPriority => {

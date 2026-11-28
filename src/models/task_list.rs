@@ -78,11 +78,23 @@ impl TaskList {
     }
 
     pub fn save(&self, path: &str) -> Result<(), String> {
-        let json = serde_json::to_string_pretty(&self)
+        let json = serde_json::to_string_pretty(self)
             .map_err(|e| format!("Failed to serialize tasks: {}", e))?;
         std::fs::write(path, json).map_err(|e| format!("Failed to write to file: {}", e))?;
         Ok(())
     }
+
+    pub fn load(path: &str) -> Result<Self, String> {
+        let text = match std::fs::read_to_string(path) {
+            Ok(text) => text,
+            Err(e) if e.kind() == std::io::ErrorKind::NotFound => return Ok(Self::new()),
+            Err(e) => return Err(format!("Error in loading file: {}", e)),
+        };
+
+        serde_json::from_str(&text)
+            .map_err(|e| format!("Failed to deserialize tasks: {}", e))
+    }
+
 }
 
 impl Default for TaskList {
