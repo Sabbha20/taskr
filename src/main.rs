@@ -49,7 +49,13 @@ fn select_priority() -> Priority {
 }
 
 fn main() {
-    let mut tasks = TaskList::load("tasks.json").unwrap();
+    let mut tasks = match TaskList::load("tasks.json") {
+        Ok(t) => t,
+        Err(e) => {
+            eprintln!("Error while loading tasks: {e}");
+            std::process::exit(1)
+        }
+    };
 
     let opt_items: Vec<&str> = MenuAction::ALL.iter().map(|a| a.label()).collect();
 
@@ -82,9 +88,6 @@ fn main() {
             }
             MenuAction::Quit => {
                 println!("Exiting...");
-                if let Err(e) = tasks.save("tasks.json") {
-                    println!("Error: {e}");
-                }
                 break;
             }
             MenuAction::ListByPriority => {
@@ -101,7 +104,12 @@ fn main() {
             }
         };
         match result {
-            Ok(msg) => println!("{msg}"),
+            Ok(msg) => {
+                println!("{msg}");
+                if let Err(e) = tasks.save("tasks.json") {
+                    println!("Result Error: {e}");
+                }
+            },
             Err(e) => println!("Error: {e}"),
         }
     }
